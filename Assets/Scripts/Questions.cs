@@ -26,6 +26,7 @@ public class Questions : MonoBehaviour
         fibonacciString = fibonacciString.Substring(0, fibonacciString.Length - 1); //Remove the x at the end
         int nextNumber = fibonacciList[fibonacciList.Count - 1] + fibonacciList[fibonacciList.Count - 2];
 
+        //Add the number and the x to the string
         if (!preventDoubleIntAtStart)
         {
             fibonacciString += fibonacciList[fibonacciList.Count - 1] + " x";
@@ -40,16 +41,16 @@ public class Questions : MonoBehaviour
 
         roomUI.WriteQuestion(fibonacciString);
 
-        //JUST MAKING THIS WORK PLEASE DELETE!
+        //Creating wrong answers for the other two doors
+        int firstWrongAnswer = nextNumber + Random.Range(-5, 6);
+        int secondWrongAnswer = nextNumber + Random.Range(-5, 6);
 
-        int[] doomApproach = { -5, -4, -3, -2, -1, 1, 2, 3, 4, 5 };
-
-        int firstWrongAnswer = nextNumber + doomApproach[Random.Range(0, doomApproach.Length)];
-        int secondWrongAnswer = nextNumber + doomApproach[Random.Range(0, doomApproach.Length)];
-
-        if(firstWrongAnswer == secondWrongAnswer)
+        if (firstWrongAnswer == secondWrongAnswer)
         {
             firstWrongAnswer++;
+
+            if (firstWrongAnswer == nextNumber)
+                firstWrongAnswer++;
         }
 
         roomUI.WriteAnswers(new int[] { nextNumber, firstWrongAnswer, secondWrongAnswer }, hallwayVariantUsed);

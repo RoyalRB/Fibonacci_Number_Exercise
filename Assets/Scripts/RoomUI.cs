@@ -14,7 +14,6 @@ public class RoomUI : MonoBehaviour
     {
         Transform answersGroup = transform.Find("Answers");
 
-        //TODO: find better alternative
         if(hallwayVariantUsed == 0) //Left
         {
             answersGroup.GetChild(0).GetComponent<Text>().text = answers[0].ToString(); //Correct Answer

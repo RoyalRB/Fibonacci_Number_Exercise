@@ -5,7 +5,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     //TODO: The dependancies are all over the place. Try to trace it all back to the player?
-    //TODO: Add error messages
 
     [SerializeField] float moveSpeed = 8f;
     
@@ -33,17 +32,29 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canChooseDoor && Input.GetMouseButtonDown(0))
+        //If the player presses the left mouse button and the player is allowed to choose a door
+        if (canChooseDoor && (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
         {
             Ray ray;
             RaycastHit hit;
 
-            ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+            if (Input.touchCount > 0) //Tapping on an android phone
+            {
+                Touch touch = Input.GetTouch(0);
+                ray = playerCamera.ScreenPointToRay(touch.position);
+            }
+            else //Clicking with a mouse
+            {
+                ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+            }
+                
 
+            //If the player clicked on something
             if(Physics.Raycast(ray, out hit))
             {
                 Transform target = hit.transform;
 
+                //If the player clicked on a door
                 if (target.tag.StartsWith("Door")) //Prevents the bottom block of code from executing when clicking anything else than a door. I prefer this approach over copying the bottom code block into the 3 if statements below.
                 {
                     if (target.CompareTag("Door/Left"))
@@ -76,7 +87,6 @@ public class Player : MonoBehaviour
                         moveCoordinates.Add(new Vector3(0f, transform.position.y, transform.position.z - 43f)); //At the end of the right hallway
                     }
 
-                    //This is causing problems
                     questionsAnswered++;
                     RoomUI parameterRoomUI = roomPooler.ReturnRoomUI(questionsAnswered);
                     roomPooler.PoolRooms(questionsAnswered);
@@ -96,6 +106,7 @@ public class Player : MonoBehaviour
 
     void MoveCameraThroughDoor()
     {
+        //Move to the coordinates until the last coordinate has been reached
         if(numberOfCoordinatesVisited < moveCoordinates.Count)
         {
             transform.position = Vector3.MoveTowards(transform.position, moveCoordinates[numberOfCoordinatesVisited], moveSpeed * Time.deltaTime);
@@ -112,7 +123,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        else
+        else //When the camera is at its final coordinate in the next room
         {
             moveCamera = false;
             canChooseDoor = true;

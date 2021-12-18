@@ -14,6 +14,7 @@ public class Room_Pooling : MonoBehaviour
     [SerializeField] GameObject[] hallwaysFirstSet;
     [SerializeField] GameObject[] hallwaysSecondSet;
 
+    //0: left, 1: middle, 2: right
     int hallwayVariantUsed = 0;
 
     GameObject previouslyUsedHallway;
@@ -28,10 +29,11 @@ public class Room_Pooling : MonoBehaviour
 
     private void Start()
     {
+        //Spawn the first hallway
         hallwaysFirstSet[hallwayVariantUsed].transform.position = new Vector3(0f, 0f, -25f);
-        Debug.Log(hallwayVariantUsed);
     }
 
+    //Pooling rooms refers to reusing rooms by pasting them one after the other and creating the impression of the sequence of rooms being infinitely long
     public void PoolRooms(int numberOfQuestionsAnswered)
     {
         int roomsToUse = numberOfQuestionsAnswered % 2;
@@ -49,8 +51,6 @@ public class Room_Pooling : MonoBehaviour
         }
 
         mainRooms[roomsToUse].transform.position = new Vector3(0f, 0f, numberOfQuestionsAnswered * room_z_Distance);
-
-        Debug.Log(hallwayVariantUsed);
     }
 
     public RoomUI ReturnRoomUI(int numberOfQuestionsAnswered)
@@ -60,7 +60,6 @@ public class Room_Pooling : MonoBehaviour
 
     public int ReturnHallwayVariantUsed()
     {
-        Debug.Log(hallwayVariantUsed);
         return hallwayVariantUsed;
     }
 }
